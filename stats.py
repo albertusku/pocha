@@ -1,11 +1,14 @@
 import openpyxl
-import matplotlib
+import graphics
+import system
 
 excel=openpyxl.load_workbook("pocha.xlsx")
 
 lista_hojas=excel.sheetnames
 data_puntos=[]
 euros_totales=0
+n_rondas_global=[]
+lista_titles=[]
 
 class Jugador:
     
@@ -19,9 +22,9 @@ class Jugador:
         self.max_par=0
         self.min_par=0
         self.euros=0
-        
         self.data_partida={}
         self.total_partida=[]
+        self.acumulado=[]
 
     def carga_data_jug(self,partida,puntos):
         self.data_partida[partida]=puntos
@@ -42,6 +45,8 @@ class Jugador:
         self.min_par=n
     def set_total_partida(self,lista):
         self.total_partida=lista
+    def set_acumulado(self,lista):
+        self.acumulado.append(lista)
     def set_euros(self):
         global euros_totales
         self.euros=self.n_pos2*3+self.n_pos3*5
@@ -112,7 +117,6 @@ def victories_counter(lista_jugadores):
     for cont in range(len(lista_todas_sumas[0])):
         puntos=[sublista[cont] for sublista in lista_todas_sumas]
         puntos_n_partida.append(puntos.copy())
-    print(puntos_n_partida)
     for puntuaciones in puntos_n_partida:
         if max(puntuaciones) == puntuaciones[0]:
             lista_jugadores[0].set_n_vic(1)
@@ -139,10 +143,47 @@ def victories_counter(lista_jugadores):
                 lista_jugadores[1].set_n_pos2(1)
                 lista_jugadores[0].set_n_pos3(1)
 
+def pre_graphics_1p(lista_jugadores):
+    global lista_titles
+    n_rondas=[]
+    for jugador in lista_jugadores:
+        load_acumulado(jugador)
+        for cont in range(len(jugador.acumulado)):
+            for i in range(len(jugador.acumulado[cont])):
+                n_rondas.append(i)
+            graphics.plot_player(n_rondas.copy(),jugador.acumulado[cont],str("Partida"+str(cont+1)+jugador.nombre))
+            n_rondas.clear()
+    #TODO en esta opcion hacer que salgan todas las partidas del mismo jugador en una sola imagen, para ello hay que coger el numero de 
+            #rondas maximo e ir cambiando el acumulado que se debo mostrar
 
+def pre_graphics_multi(lista_jugadores):
+    for jugador in lista_jugadores:
+        load_acumulado(jugador)
+    n_rondas=[]
+    for cont in range(len(lista_jugadores[0].acumulado)):
+        for i in range(len(lista_jugadores[0].acumulado[cont])):
+            n_rondas.append(i)
+        graphics.plot_multiplayer(n_rondas.copy(),lista_jugadores[0].acumulado[cont],lista_jugadores[1].acumulado[cont],lista_jugadores[2].acumulado[cont],str("Partida"+str(cont+1)))
+        n_rondas.clear()
+
+def load_acumulado(jugador):
+    acumulado=[]
+    n_rondas=[]
+    global lista_titles
+    for partida,puntos in jugador.data_partida.items():
+        for cont,puntuacion in enumerate(puntos):
+            if len(acumulado)==0:
+                acumulado.append(puntuacion)
+            else:
+                acumulado.append(acumulado[cont-1]+puntuacion)
+            n_rondas.append(cont)
+        jugador.set_acumulado(acumulado.copy())
+        acumulado.clear()
+        n_rondas.clear()
         
-  
+
 if __name__ == "__main__":
+    option=system.mange_system()
     Teo=Jugador("T")
     Visi=Jugador("V")
     Alberto=Jugador("A")
@@ -152,3 +193,8 @@ if __name__ == "__main__":
     stats(lista_jugadores)
     for jugador in lista_jugadores:
         jugador.print_jugador()
+    if option:
+        pre_graphics_multi(lista_jugadores)
+    else:
+        pre_graphics_1p(lista_jugadores)
+    
