@@ -3,15 +3,52 @@ import openpyxl
 excel=openpyxl.load_workbook("pocha.xlsx")
 
 lista_hojas=excel.sheetnames
-dict_T={}
-dict_V={}
-dict_A={}
 data_puntos=[]
-lista_jugadores=["T","V","A"]
 
-def carga_excel():
-    global lista_jugadores
-    global dict_A,dict_V,dict_T
+
+class Jugador:
+
+    def __init__(self,nombre):
+        self.nombre=nombre
+        self.n_vic=0 
+        self.n_der=0
+        self.p_max=0
+        self.p_min=0
+        self.max_par=0
+        self.min_par=0
+        self.euros=0
+        self.data_partida={}
+        self.total_partida=[]
+
+    def vic_der(self,partida):
+        pass
+
+    def carga_data_jug(self,partida,puntos):
+        self.data_partida[partida]=puntos
+    
+    def set_n_vic(self,n):
+        self.n_vic+=n
+    def set_n_der(self,n):
+        self.n_der+=n
+    def set_parcial_max(self,n):
+        self.p_max=n
+    def set_parcial_min(self,n):
+        self.p_min=n
+    def set_max_partida(self,n):
+        self.max_par=n
+    def set_min_partida(self,n):
+        self.min_par=n
+    def set_total_partida(self,lista):
+        self.total_partida=lista
+    def print_jugador(self):
+        print("")
+        print("Jugador:",self.nombre)
+        print("Maximo partida:",self.max_par," Minimo partida:",self.min_par)
+        print("Maximo parcial:",self.p_max," Minimo parcial:",self.p_min)
+        print("Victorias:",self.n_vic," Derrotas:",self.n_der)
+        
+
+def carga_excel(jugador):
     global lista_hojas
     global data_puntos
     for partida in lista_hojas:
@@ -19,32 +56,23 @@ def carga_excel():
         for columna in data_partida.iter_cols(values_only=True):
             for celda in columna:
                 if celda == "T" or celda == "V" or celda == "A":
-                    jugador=celda
+                    jugador_act=celda
                 if not isinstance(celda,str):
                     data_puntos.append(celda)
-            if jugador=="T":
-                dict_T[partida]=data_puntos.copy()
-            if jugador=="V":
-                dict_V[partida]=data_puntos.copy()
-            if jugador=="A":
-                dict_A[partida]=data_puntos.copy()
+                    if jugador_act==jugador.nombre:
+                        jugador.carga_data_jug(partida,data_puntos.copy())
             data_puntos.clear()
 
-def stats():
+def stats(lista_jugadores):
 
     for jugador in lista_jugadores:
-        if jugador == "T":
-            print(jugador)
-            create_stats(dict_T)
-        if jugador == "V":
-            print(jugador)
-            create_stats(dict_V)
-        if jugador == "A":
-            print(jugador)
-            create_stats(dict_A)
+        create_stats(jugador)
+    victories_counter(lista_jugadores)
+    
             
 
-def create_stats(data):
+def create_stats(jugador):
+    data=jugador.data_partida
     lista_maximos=[]
     lista_minimos=[]
     lista_suma=[]
@@ -58,12 +86,44 @@ def create_stats(data):
         lista_maximos.append(max_)
         lista_minimos.append(min_)
         total=0
-    max_max=max(lista_maximos)
-    min_min=min(lista_minimos)
-    max_suma=max(lista_suma)
-    min_suma=min(lista_suma)
-    print(max_max,min_min,max_suma,min_suma)
+    jugador.set_parcial_max(max(lista_maximos))
+    jugador.set_parcial_min(min(lista_minimos))
+    jugador.set_max_partida(max(lista_suma))
+    jugador.set_min_partida(min(lista_suma))
+    jugador.set_total_partida(lista_suma)
     
+def victories_counter(lista_jugadores):
+    lista_todas_sumas=[]
+    puntos_n_partida=[]
+    for jugador in lista_jugadores:
+        lista_todas_sumas.append(jugador.total_partida)
+    for cont in range(len(lista_todas_sumas[0])):
+        puntos=[sublista[cont] for sublista in lista_todas_sumas]
+        puntos_n_partida.append(puntos.copy())
+    print(puntos_n_partida)
+    for puntuaciones in puntos_n_partida:
+        if max(puntuaciones) == puntuaciones[0]:
+            lista_jugadores[0].set_n_vic(1)
+            lista_jugadores[1].set_n_der(1)
+            lista_jugadores[2].set_n_der(1)
+        if max(puntuaciones) == puntuaciones[1]:
+            lista_jugadores[1].set_n_vic(1)
+            lista_jugadores[0].set_n_der(1)
+            lista_jugadores[2].set_n_der(1)
+        if max(puntuaciones) == puntuaciones[2]:
+            lista_jugadores[2].set_n_vic(1)
+            lista_jugadores[0].set_n_der(1)
+            lista_jugadores[1].set_n_der(1)
+
+        
+  
 if __name__ == "__main__":
-    carga_excel()
-    stats()
+    Teo=Jugador("T")
+    Visi=Jugador("V")
+    Alberto=Jugador("A")
+    lista_jugadores=[Teo,Visi,Alberto]
+    for jugador in lista_jugadores:
+        carga_excel(jugador)
+    stats(lista_jugadores)
+    for jugador in lista_jugadores:
+        jugador.print_jugador()
