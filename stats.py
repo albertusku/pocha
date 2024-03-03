@@ -1,35 +1,37 @@
 import openpyxl
+import matplotlib
 
 excel=openpyxl.load_workbook("pocha.xlsx")
 
 lista_hojas=excel.sheetnames
 data_puntos=[]
-
+euros_totales=0
 
 class Jugador:
-
+    
     def __init__(self,nombre):
         self.nombre=nombre
         self.n_vic=0 
-        self.n_der=0
+        self.n_pos2=0
+        self.n_pos3=0
         self.p_max=0
         self.p_min=0
         self.max_par=0
         self.min_par=0
         self.euros=0
+        
         self.data_partida={}
         self.total_partida=[]
-
-    def vic_der(self,partida):
-        pass
 
     def carga_data_jug(self,partida,puntos):
         self.data_partida[partida]=puntos
     
     def set_n_vic(self,n):
         self.n_vic+=n
-    def set_n_der(self,n):
-        self.n_der+=n
+    def set_n_pos2(self,n):
+        self.n_pos2+=n
+    def set_n_pos3(self,n):
+        self.n_pos3+=n
     def set_parcial_max(self,n):
         self.p_max=n
     def set_parcial_min(self,n):
@@ -40,12 +42,19 @@ class Jugador:
         self.min_par=n
     def set_total_partida(self,lista):
         self.total_partida=lista
+    def set_euros(self):
+        global euros_totales
+        self.euros=self.n_pos2*3+self.n_pos3*5
+        euros_totales+=self.euros
     def print_jugador(self):
+        global euros_totales
         print("")
         print("Jugador:",self.nombre)
         print("Maximo partida:",self.max_par," Minimo partida:",self.min_par)
         print("Maximo parcial:",self.p_max," Minimo parcial:",self.p_min)
-        print("Victorias:",self.n_vic," Derrotas:",self.n_der)
+        print("Victorias:",self.n_vic,", 2ª Posicion:",self.n_pos2,", 3ª Posicion:",self.n_pos3)
+        print("Euros aportados:",self.euros, "de un total de:",euros_totales,"->",round((self.euros/euros_totales)*100,2),"%")
+
         
 
 def carga_excel(jugador):
@@ -68,6 +77,9 @@ def stats(lista_jugadores):
     for jugador in lista_jugadores:
         create_stats(jugador)
     victories_counter(lista_jugadores)
+    for jugador in lista_jugadores:
+        jugador.set_euros()
+    
     
             
 
@@ -104,16 +116,29 @@ def victories_counter(lista_jugadores):
     for puntuaciones in puntos_n_partida:
         if max(puntuaciones) == puntuaciones[0]:
             lista_jugadores[0].set_n_vic(1)
-            lista_jugadores[1].set_n_der(1)
-            lista_jugadores[2].set_n_der(1)
+            if puntuaciones[1]>puntuaciones[2]:
+                lista_jugadores[1].set_n_pos2(1)
+                lista_jugadores[2].set_n_pos3(1)
+            else:
+                lista_jugadores[2].set_n_pos2(1)
+                lista_jugadores[1].set_n_pos3(1)
         if max(puntuaciones) == puntuaciones[1]:
             lista_jugadores[1].set_n_vic(1)
-            lista_jugadores[0].set_n_der(1)
-            lista_jugadores[2].set_n_der(1)
+            if puntuaciones[0]>puntuaciones[2]:
+                lista_jugadores[0].set_n_pos2(1)
+                lista_jugadores[2].set_n_pos3(1)
+            else:
+                lista_jugadores[2].set_n_pos2(1)
+                lista_jugadores[0].set_n_pos3(1)
         if max(puntuaciones) == puntuaciones[2]:
             lista_jugadores[2].set_n_vic(1)
-            lista_jugadores[0].set_n_der(1)
-            lista_jugadores[1].set_n_der(1)
+            if puntuaciones[0]>puntuaciones[1]:
+                lista_jugadores[0].set_n_pos2(1)
+                lista_jugadores[1].set_n_pos3(1)
+            else:
+                lista_jugadores[1].set_n_pos2(1)
+                lista_jugadores[0].set_n_pos3(1)
+
 
         
   
