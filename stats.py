@@ -146,15 +146,16 @@ def victories_counter(lista_jugadores):
 def pre_graphics_1p(lista_jugadores):
     global lista_titles
     n_rondas=[]
+    lista_rondas=[]
     for jugador in lista_jugadores:
         load_acumulado(jugador)
-        for cont in range(len(jugador.acumulado)):
-            for i in range(len(jugador.acumulado[cont])):
-                n_rondas.append(i)
-            graphics.plot_player(n_rondas.copy(),jugador.acumulado[cont],str("Partida"+str(cont+1)+jugador.nombre))
-            n_rondas.clear()
-    #TODO en esta opcion hacer que salgan todas las partidas del mismo jugador en una sola imagen, para ello hay que coger el numero de 
-            #rondas maximo e ir cambiando el acumulado que se debo mostrar
+    for cont in range(len(lista_jugadores[0].acumulado)):
+        for i in range(len(lista_jugadores[0].acumulado[cont])):
+            n_rondas.append(i)
+        lista_rondas.append(n_rondas.copy())
+        n_rondas.clear()
+    graphics.plot_player(system.player,lista_rondas,lista_jugadores,)
+
 
 def pre_graphics_multi(lista_jugadores):
     for jugador in lista_jugadores:
@@ -183,7 +184,7 @@ def load_acumulado(jugador):
         
 
 if __name__ == "__main__":
-    option=system.mange_system()
+    option=system.manage_system()
     Teo=Jugador("T")
     Visi=Jugador("V")
     Alberto=Jugador("A")

@@ -2,12 +2,23 @@ from matplotlib import pyplot
 
 plt=pyplot
 
-def plot_player(x,y,title):
-    print("Cargando graphics")
-    plt.plot(x,y)
-    plt.xlabel('Eje X')
-    plt.ylabel('Eje Y')
-    plt.title(title)
+def plot_player(player,lista_rondas,lista_jugadores):
+    if player!="full":
+        for cont in range(len(lista_rondas)):
+            if player=="T" or player=="Teo":
+                plt.plot(lista_rondas[cont],lista_jugadores[0].acumulado[cont])
+            if player=="V" or player=="Visi":
+                plt.plot(lista_rondas[cont],lista_jugadores[1].acumulado[cont])
+            if player=="A" or player=="Alberto":
+                plt.plot(lista_rondas[cont],lista_jugadores[2].acumulado[cont])
+    else:
+        if player=="full":
+            for cont in range(len(lista_jugadores)):
+                plt.figure()
+                for i in range(len(lista_rondas)):
+                    plt.plot(lista_rondas[i],lista_jugadores[cont].acumulado[i])
+                plt.title(lista_jugadores[cont].nombre)
+    
     plt.show()
 
 def plot_multiplayer(x,y1,y2,y3,title):
@@ -18,3 +29,6 @@ def plot_multiplayer(x,y1,y2,y3,title):
     plt.title(title)
     plt.legend()
     plt.show()
+
+
+
