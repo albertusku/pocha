@@ -1,7 +1,5 @@
 import openpyxl
 import graphics
-import system
-import interface
 
 excel=openpyxl.load_workbook("pocha.xlsx")
 
@@ -193,14 +191,7 @@ def load_acumulado(jugador):
         
 
 def main():
-    # option=system.manage_system()
     for jugador in lista_jugadores:
         carga_excel(jugador)
     stats()
-    # for jugador in lista_jugadores:
-    #     jugador.print_jugador()
-    # if option:
-    #     pre_graphics_multi(lista_jugadores)
-    # else:
-    #     pre_graphics_1p(lista_jugadores)
     
