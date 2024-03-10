@@ -1,8 +1,13 @@
 from matplotlib import pyplot
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 plt=pyplot
 
-def plot_player(player,lista_rondas,lista_jugadores):
+def plot_player(player,lista_rondas,lista_jugadores,ventana):
+    plt.close()
+    for element in ventana.winfo_children():
+            if str(element).find("canvas")!=-1:
+                element.destroy()
     if player!="full":
         for cont in range(len(lista_rondas)):
             if player=="T" or player=="Teo":
@@ -18,8 +23,11 @@ def plot_player(player,lista_rondas,lista_jugadores):
                 for i in range(len(lista_rondas)):
                     plt.plot(lista_rondas[i],lista_jugadores[cont].acumulado[i])
                 plt.title(lista_jugadores[cont].nombre)
-    
-    plt.show()
+                
+    canvas = FigureCanvasTkAgg(plt.gcf(), master=ventana)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+    # plt.show()
 
 def plot_multiplayer(x,y1,y2,y3,title):
     plt.plot(x,y1,label="T")

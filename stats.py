@@ -1,6 +1,7 @@
 import openpyxl
 import graphics
 import system
+import interface
 
 excel=openpyxl.load_workbook("pocha.xlsx")
 
@@ -9,6 +10,7 @@ data_puntos=[]
 euros_totales=0
 n_rondas_global=[]
 lista_titles=[]
+
 
 class Jugador:
     
@@ -61,6 +63,10 @@ class Jugador:
         print("Euros aportados:",self.euros, "de un total de:",euros_totales,"->",round((self.euros/euros_totales)*100,2),"%")
 
         
+Teo=Jugador("T")
+Visi=Jugador("V")
+Alberto=Jugador("A")
+lista_jugadores=[Teo,Visi,Alberto]
 
 def carga_excel(jugador):
     global lista_hojas
@@ -77,11 +83,11 @@ def carga_excel(jugador):
                         jugador.carga_data_jug(partida,data_puntos.copy())
             data_puntos.clear()
 
-def stats(lista_jugadores):
-
+def stats():
+    global lista_jugadores
     for jugador in lista_jugadores:
         create_stats(jugador)
-    victories_counter(lista_jugadores)
+    victories_counter()
     for jugador in lista_jugadores:
         jugador.set_euros()
     
@@ -109,7 +115,8 @@ def create_stats(jugador):
     jugador.set_min_partida(min(lista_suma))
     jugador.set_total_partida(lista_suma)
     
-def victories_counter(lista_jugadores):
+def victories_counter():
+    global lista_jugadores
     lista_todas_sumas=[]
     puntos_n_partida=[]
     for jugador in lista_jugadores:
@@ -143,7 +150,8 @@ def victories_counter(lista_jugadores):
                 lista_jugadores[1].set_n_pos2(1)
                 lista_jugadores[0].set_n_pos3(1)
 
-def pre_graphics_1p(lista_jugadores):
+def pre_graphics_1p(nombre):
+    global lista_jugadores
     global lista_titles
     n_rondas=[]
     lista_rondas=[]
@@ -154,10 +162,11 @@ def pre_graphics_1p(lista_jugadores):
             n_rondas.append(i)
         lista_rondas.append(n_rondas.copy())
         n_rondas.clear()
-    graphics.plot_player(system.player,lista_rondas,lista_jugadores,)
+    return nombre,lista_rondas,lista_jugadores
 
 
-def pre_graphics_multi(lista_jugadores):
+def pre_graphics_multi():
+    global lista_jugadores
     for jugador in lista_jugadores:
         load_acumulado(jugador)
     n_rondas=[]
@@ -183,19 +192,15 @@ def load_acumulado(jugador):
         n_rondas.clear()
         
 
-if __name__ == "__main__":
-    option=system.manage_system()
-    Teo=Jugador("T")
-    Visi=Jugador("V")
-    Alberto=Jugador("A")
-    lista_jugadores=[Teo,Visi,Alberto]
+def main():
+    # option=system.manage_system()
     for jugador in lista_jugadores:
         carga_excel(jugador)
-    stats(lista_jugadores)
-    for jugador in lista_jugadores:
-        jugador.print_jugador()
-    if option:
-        pre_graphics_multi(lista_jugadores)
-    else:
-        pre_graphics_1p(lista_jugadores)
+    stats()
+    # for jugador in lista_jugadores:
+    #     jugador.print_jugador()
+    # if option:
+    #     pre_graphics_multi(lista_jugadores)
+    # else:
+    #     pre_graphics_1p(lista_jugadores)
     
