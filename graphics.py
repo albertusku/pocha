@@ -28,14 +28,15 @@ def plot_player(player,lista_rondas,lista_jugadores,ventana):
     canvas.get_tk_widget().pack()
     # plt.show()
 
-def plot_multiplayer(x,y1,y2,y3,title):
+def plot_multiplayer(x,y1,y2,y3,ventana):
     plt.plot(x,y1,label="T")
     plt.plot(x,y2,label="V")
     plt.plot(x,y3,label="A")
     plt.axvline(x=len(x)/2, color='r', linestyle='--')
-    plt.title(title)
     plt.legend()
-    plt.show()
+    canvas = FigureCanvasTkAgg(plt.gcf(), master=ventana)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
 
 
 
