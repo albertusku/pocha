@@ -53,12 +53,13 @@ class Jugador:
         euros_totales+=self.euros
     def print_jugador(self):
         global euros_totales
-        print("")
-        print("Jugador:",self.nombre)
-        print("Maximo partida:",self.max_par," Minimo partida:",self.min_par)
-        print("Maximo parcial:",self.p_max," Minimo parcial:",self.p_min)
-        print("Victorias:",self.n_vic,", 2ª Posicion:",self.n_pos2,", 3ª Posicion:",self.n_pos3)
-        print("Euros aportados:",self.euros, "de un total de:",euros_totales,"->",round((self.euros/euros_totales)*100,2),"%")
+        result=""
+        result+="Jugador:"+str(self.nombre)+'\n'
+        result+="Maximo partida:"+str(self.max_par)+" Minimo partida:"+str(self.min_par)+'\n'
+        result+="Maximo parcial:"+str(self.p_max)+" Minimo parcial:"+str(self.p_min)+'\n'
+        result+="Victorias:"+str(self.n_vic)+", 2ª Posicion:"+str(self.n_pos2)+", 3ª Posicion:"+str(self.n_pos3)+'\n'
+        result+="Euros aportados:"+str(self.euros)+ "de un total de:"+str(euros_totales)+"->"+str(round((self.euros/euros_totales)*100,2))+"%"+'\n'
+        return result
 
         
 Teo=Jugador("T")

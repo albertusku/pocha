@@ -80,6 +80,11 @@ def pantalla_datos_player(player,lista_jugadores):
         n_but.pack(side="left")
 
 def pantalla_datos_multiplayer(lista_jugadores):
+    text_data=""
+    for jugador in lista_jugadores:
+        text_data+=jugador.print_jugador()+'\n'    
+    text1=tk.Label(ventana,text=text_data)
+    text1.pack()
     but3=tk.Button(ventana,text="Atras",command=lambda: but_click(2),width=20,bg="white")
     but3.pack()
     partidas=list(lista_jugadores[0].data_partida.keys())
