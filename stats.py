@@ -8,8 +8,7 @@ data_puntos=[]
 euros_totales=0
 n_rondas_global=[]
 lista_titles=[]
-# lista_ronda=[1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,13,13,12,11,10,9,8,7,6,5,4,3,2,1,1,1]
-lista_ronda=[1,1]
+lista_ronda=[1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,13,13,12,11,10,9,8,7,6,5,4,3,2,1,1,1]
 
 class Jugador:
     

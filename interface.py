@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import stats
 import graphics
 
@@ -55,7 +56,6 @@ def but_click(id,player="",n_partida=0):
         
 
 def pantalla_partida():
-    container1=tk.Frame(ventana,pady=60)#Para la lista de rondas
     container2=tk.Frame(ventana,padx=50)
     but3=tk.Button(container2,text="Atras",command=lambda: but_click(3))
     but8=tk.Button(container2,text="T",command=lambda: but_click(11,"T"),width=20,bg="white")
@@ -65,18 +65,21 @@ def pantalla_partida():
     but8.pack(side="left")
     but9.pack(side="left")
     but10.pack(side="left")
-    for ronda in stats.lista_ronda:
-        n_label=tk.Label(container1,text=str(ronda),pady=5)
-        n_label.pack(side="left")
-        for cont in range(len(stats.lista_jugadores)):
-            n_text=tk.Text(container1,width=5,height=1,pady=5)
-            n_text.insert(tk.END,"")
-            if cont==2:
-                n_text.pack(side="top")
-            else:
-                n_text.pack(side="right")
-    container1.pack(side="left")
     container2.pack()
+    for ronda in stats.lista_ronda:
+        container1 = tk.Frame(ventana)
+        container1.pack(anchor="w")
+
+        label_ronda = tk.Label(container1, text=str(ronda))
+        if ronda>=10:
+            label_ronda.pack(side="left", padx=306)
+        else:
+            label_ronda.pack(side="left", padx=310)
+
+        for _ in range(3):
+            texto = tk.Text(container1, width=5, height=1)
+            texto.pack(side="left", padx=65)
+
     
 
 def pantalla_datos():
